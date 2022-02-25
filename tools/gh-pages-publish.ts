@@ -17,6 +17,10 @@ let parsedUrl = url.parse(repoUrl)
 let repository = (parsedUrl.host || "") + (parsedUrl.path || "")
 let ghToken = process.env.GH_TOKEN
 
+if (!ghToken) {
+  throw new Error('No GH_TOKEN found.');
+}
+
 echo("Deploying docs!!!")
 cd("docs")
 touch(".nojekyll")
