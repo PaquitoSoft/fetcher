@@ -1,15 +1,16 @@
 import { del } from '../src/fetcher';
+import { HttpError } from '../src/shared-types';
 
 const BASE_URL = 'https://localhost';
 
-describe("Fetcher", () => {
+describe('Fetcher', () => {
   const VinceCarter = {
     id: 15,
     name: 'Vince',
     email: 'v.carter@email.com'
   };
 
-  describe('del', ()=> {
+  describe('del', () => {
     it('Should process delete request', async () => {
       const data = await del(`${BASE_URL}/api/user/10`);
       expect(data).toEqual({ deleted: true });
@@ -28,11 +29,11 @@ describe("Fetcher", () => {
         await del(`${BASE_URL}/api/user/57`);
         expect(false).toBe(true);
       } catch (e) {
-        expect(e.statusCode).toBe(404);
-        expect(e.message).toEqual('Not Found');
-        expect(e.response).not.toBeUndefined();
+        const error = e as HttpError;
+        expect(error.statusCode).toBe(404);
+        expect(error.message).toEqual('Not Found');
+        expect(error.response).not.toBeUndefined();
       }
     });
   });
 });
-

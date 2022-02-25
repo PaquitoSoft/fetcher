@@ -3,7 +3,7 @@ export interface HttpError extends Error {
   response?: Response;
 }
 
-type CacheManagerSetterOptions = {
+export type CacheManagerSetterOptions = {
   ttl?: number; // seconds
 };
 

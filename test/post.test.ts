@@ -1,10 +1,10 @@
 import { get, post, put, del, setCacheManager } from '../src/fetcher';
+import { HttpError } from '../src/shared-types';
 
 const BASE_URL = 'https://localhost';
 
-describe("Fetcher", () => {
-
-  describe('post', ()=> {
+describe('Fetcher', () => {
+  describe('post', () => {
     const MichaelJordan = {
       name: 'Michael',
       email: 'm.jordan@email.com'
@@ -33,12 +33,11 @@ describe("Fetcher", () => {
         await post(`${BASE_URL}/api/user?status=error`, MichaelJordan);
         expect(false).toBe(true);
       } catch (e) {
-        expect(e.statusCode).toBe(500);
-        expect(e.message).toEqual('Internal Server Error');
-        expect(e.response).not.toBeUndefined();
+        const error = e as HttpError;
+        expect(error.statusCode).toBe(500);
+        expect(error.message).toEqual('Internal Server Error');
+        expect(error.response).not.toBeUndefined();
       }
     });
-
   });
 });
-

@@ -1,10 +1,10 @@
 import { put } from '../src/fetcher';
+import { HttpError } from '../src/shared-types';
 
 const BASE_URL = 'https://localhost';
 
-describe("Fetcher", () => {
-
-  describe('put', ()=> {
+describe('Fetcher', () => {
+  describe('put', () => {
     const MichaelJordan = {
       id: 23,
       name: 'Michael',
@@ -27,12 +27,11 @@ describe("Fetcher", () => {
         await put(`${BASE_URL}/api/user/57`, MichaelJordan);
         expect(false).toBe(true);
       } catch (e) {
-        expect(e.statusCode).toBe(404);
-        expect(e.message).toEqual('Not Found');
-        expect(e.response).not.toBeUndefined();
+        const error = e as HttpError;
+        expect(error.statusCode).toBe(404);
+        expect(error.message).toEqual('Not Found');
+        expect(error.response).not.toBeUndefined();
       }
     });
   });
-
 });
-

@@ -1,16 +1,16 @@
 import { get } from '../src/fetcher';
+import { HttpError } from '../src/shared-types';
 
 const BASE_URL = 'https://localhost';
 
-describe("Fetcher", () => {
+describe('Fetcher', () => {
   const VinceCarter = {
     id: 15,
     name: 'Vince',
     email: 'v.carter@email.com'
   };
 
-  describe('get', ()=> {
-
+  describe('get', () => {
     it('Should return requested json resource', async () => {
       const user = await get(`${BASE_URL}/api/user/15`);
       expect(user).toEqual(VinceCarter);
@@ -22,7 +22,7 @@ describe("Fetcher", () => {
     });
 
     it('Should return requested xml resource', async () => {
-      const doc = await get(`${BASE_URL}/api/user/3`) as XMLDocument;
+      const doc = (await get(`${BASE_URL}/api/user/3`)) as XMLDocument;
 
       expect(doc.getElementsByTagName('id')[0].textContent).toEqual('3');
       expect(doc.getElementsByTagName('name')[0].textContent).toEqual('Allen');
@@ -30,7 +30,7 @@ describe("Fetcher", () => {
     });
 
     it('Should return requested html resource', async () => {
-      const htmlDoc = await get(`${BASE_URL}/api/user/21`) as Document;
+      const htmlDoc = (await get(`${BASE_URL}/api/user/21`)) as Document;
 
       expect(htmlDoc.getElementById('user-id')!.textContent).toEqual('21');
       expect(htmlDoc.getElementById('user-name')!.textContent).toEqual('Tim');
@@ -38,7 +38,7 @@ describe("Fetcher", () => {
     });
 
     it('Should return requested text resource', async () => {
-      const raw = await get(`${BASE_URL}/api/user/12`) as string;
+      const raw = (await get(`${BASE_URL}/api/user/12`)) as string;
       const user = raw.split(',').reduce<Record<string, string>>((acc, curr) => {
         const [key, value] = curr.split('=');
         acc[key] = value;
@@ -53,7 +53,7 @@ describe("Fetcher", () => {
     });
 
     it('Should return data as text when server does not provide any content type', async () => {
-      const raw = await get(`${BASE_URL}/api/user/20`) as string;
+      const raw = (await get(`${BASE_URL}/api/user/20`)) as string;
       const user = raw.split(',').reduce<Record<string, string>>((acc, curr) => {
         const [key, value] = curr.split('=');
         acc[key] = value;
@@ -98,9 +98,10 @@ describe("Fetcher", () => {
         await get(`${BASE_URL}/api/user/44`);
         expect(false).toBe(true);
       } catch (e) {
-        expect(e.statusCode).toBe(404);
-        expect(e.message).toEqual('Not Found');
-        expect(e.response).not.toBeUndefined();
+        const error = e as HttpError;
+        expect(error.statusCode).toBe(404);
+        expect(error.message).toEqual('Not Found');
+        expect(error.response).not.toBeUndefined();
       }
     });
 
@@ -109,6 +110,4 @@ describe("Fetcher", () => {
       expect(user).toEqual(VinceCarter);
     });
   });
-
 });
-

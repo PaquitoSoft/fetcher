@@ -4,7 +4,7 @@
   "description": "",
   "keywords": [],
   "main": "dist/fetcher.umd.js",
-  "module": "dist/fetcher.es5.js",
+  "module": "dist/fetcher.es6.js",
   "typings": "dist/types/fetcher.d.ts",
   "files": [
     "dist"
@@ -21,7 +21,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs src/fetcher.ts",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
@@ -76,7 +76,7 @@
     ]
   },
   "prettier": {
-    "semi": false,
+    "semi": true,
     "singleQuote": true
   },
   "commitlint": {
@@ -99,6 +99,7 @@
     "husky": "^1.0.1",
     "jest": "^27.5.1",
     "jest-config": "^27.5.1",
+    "msw": "^0.38.1",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
     "node-fetch": "^2.6.7",
@@ -120,11 +121,8 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
-    "typedoc": "^0.12.0",
-    "typescript": "^3.0.3",
+    "typedoc": "^0.22.12",
+    "typescript": "^4.5.5",
     "xmldom": "^0.6.0"
-  },
-  "dependencies": {
-    "msw": "^0.38.1"
   }
 }
