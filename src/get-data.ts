@@ -12,14 +12,14 @@ type GetDataRequestOptions = {
   cache: CacheManager;
 };
 
-async function getData(
+async function getData<T>(
   url: string, {
     fetchOptions,
     ttl,
     cache
   }: GetDataRequestOptions
-): Promise<unknown> {
-  const result = cache.get(url);
+): Promise<T> {
+  const result = cache.get(url) as T;
 
   if (result) {
     return Promise.resolve(result);
@@ -38,7 +38,7 @@ async function getData(
     throw error;
   }
 
-  const data = await parseResponse(response);
+  const data = await parseResponse<T>(response);
 
   if (ttl) {
     cache.set(url, data, { ttl });

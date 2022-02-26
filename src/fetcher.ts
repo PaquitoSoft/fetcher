@@ -20,24 +20,24 @@ export type RequestOptions = {
   fetchOptions?: RequestInit;
 };
 
-export function get(url: string, options?: RequestOptions) {
-  return getData(url, {
+export function get<T>(url: string, options?: RequestOptions) {
+  return getData<T>(url, {
     ttl: options?.ttl,
     fetchOptions: options?.fetchOptions,
     cache
   });
 }
 
-export function post(url: string, body: object | string, options?: RequestOptions) {
-  return sendData(url, { method: 'POST', body, fetchOptions: options?.fetchOptions });
+export function post<T>(url: string, body: object | string, options?: RequestOptions) {
+  return sendData<T>(url, { method: 'POST', body, fetchOptions: options?.fetchOptions });
 }
 
-export function put(url: string, body: object | string, options?: RequestOptions) {
-  return sendData(url, { method: 'PUT', body, fetchOptions: options?.fetchOptions });
+export function put<T>(url: string, body: object | string, options?: RequestOptions) {
+  return sendData<T>(url, { method: 'PUT', body, fetchOptions: options?.fetchOptions });
 }
 
-export function del(url: string, options?: RequestOptions & { body?: object | string }) {
-  return sendData(url, {
+export function del<T>(url: string, options?: RequestOptions & { body?: object | string }) {
+  return sendData<T>(url, {
     method: 'DELETE',
     body: options?.body,
     fetchOptions: options?.fetchOptions

@@ -19,13 +19,33 @@ describe('Fetcher', () => {
       });
     });
 
-    it('Should process request then body is a string', async () => {
+    it('Should process request when body is a string', async () => {
       const user = await post(`${BASE_URL}/api/user`, JSON.stringify(MichaelJordan));
 
       expect(user).toEqual({
         ...MichaelJordan,
         id: 23
       });
+    });
+
+    it('Should send custom headers', async () => {
+      try {
+        await post(
+          `${BASE_URL}/api/user`,
+          MichaelJordan,
+          {
+            fetchOptions: {
+              headers: { 'X-Custom-Header': 'raise-error' }
+            }
+          }
+        );
+        expect(false).toBe(true);
+      } catch (e) {
+        const error = e as HttpError;
+        expect(error.statusCode).toBe(500);
+        expect(error.message).toEqual('Internal Server Error');
+        expect(error.response).not.toBeUndefined();
+      }
     });
 
     it('Should raise an error when server fails', async () => {

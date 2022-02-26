@@ -1,17 +1,23 @@
 type ResponseParser = (response: Response) => unknown;
 
-const domParser = new DOMParser();
+let _domParser: DOMParser;
+const getDomParser = () => {
+  if (!_domParser) {
+    _domParser = new DOMParser();
+  }
+  return _domParser;
+}
 
 const parsersMap: Record<string, ResponseParser> = {
   'base': (response: Response) => response.text(),
   'text/plain': (response: Response) => response.text(),
   'text/html': async (response: Response) => {
     const raw = await response.text();
-    return domParser.parseFromString(raw, 'text/html');
+    return getDomParser().parseFromString(raw, 'text/html');
   },
   'text/xml': async (response: Response) => {
     const raw = await response.text();
-    return domParser.parseFromString(raw, 'text/html');
+    return getDomParser().parseFromString(raw, 'text/html');
   },
   'application/json': async (response: Response) => {
     // This is to handle empty responses as response.json()
@@ -22,11 +28,11 @@ const parsersMap: Record<string, ResponseParser> = {
   },
 };
 
-function parseResponse(response: Response) {
+function parseResponse<T>(response: Response): T {
   const contentType = (response.headers.get('content-type') || 'base').split(';')[0];
   const parser: ResponseParser = parsersMap[contentType.toLowerCase()] || parsersMap.base;
 
-  return parser(response);
+  return parser(response) as T;
 }
 
 export default parseResponse;

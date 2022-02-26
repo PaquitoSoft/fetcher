@@ -1,9 +1,11 @@
-import fetch from 'node-fetch';
+import fetch, { Headers } from 'node-fetch';
 import { DOMParser } from 'xmldom';
 import { server } from './test/mocks/server';
 
 // @ts-ignore
 global.fetch = fetch;
+// @ts-ignore
+global.Headers = Headers;
 // @ts-ignore
 global.DOMParser = DOMParser;
 

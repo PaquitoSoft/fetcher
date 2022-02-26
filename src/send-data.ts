@@ -7,26 +7,23 @@ type SendDataRequestOptions = {
   fetchOptions?: RequestInit;
 }
 
-export async function sendData(
+export async function sendData<T>(
   url: string, {
     body,
     method = 'POST',
     fetchOptions
   }: SendDataRequestOptions
-): Promise<unknown> {
+): Promise<T> {
 
-  // const requestOptions: RequestInit = {
-  //   method,
-  //   headers: {
-  //     ...headers,
-  //     'Content-Type': 'application/json'
-  //   }
-  // };
+  const headers = new Headers(fetchOptions?.headers || {});
+  if (headers.get('Content-Type') === null) {
+    headers.set('Content-Type', (typeof body === 'string') ? 'text/plain' : 'application/json');
+  }
 
   const requestOptions: RequestInit = {
     ...fetchOptions,
     method: method,
-    headers: fetchOptions?.headers || {}
+    headers
   };
 
   if (body) {
@@ -42,7 +39,7 @@ export async function sendData(
     throw error;
   }
 
-  const data = await parseResponse(response);
+  const data = await parseResponse<T>(response);
 
   return data;
 }

@@ -99,14 +99,17 @@ export const handlers = [
   }),
 
   rest.post(`${BASE_URL}/api/user`, (req, res, ctx) => {
-    if (req.url.searchParams.get('status') === 'error') {
+    if (
+      req.url.searchParams.get('status') === 'error' ||
+      req.headers.get('X-Custom-Header') === 'raise-error'
+    ) {
       return res(
         ctx.status(500),
         ctx.json({ error: 'Something went wrong' })
       );
     }
 
-    const requestBody = JSON.parse(req.body as string);
+    const requestBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
 
     return res(
       ctx.status(201),
@@ -120,7 +123,7 @@ export const handlers = [
 
   rest.put(`${BASE_URL}/api/user/:userId`, (req, res, ctx) => {
     if (req.params.userId === '23') {
-      const requestBody = JSON.parse(req.body as string);
+      const requestBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
       return res(
         ctx.status(200),
         ctx.json({
@@ -148,7 +151,7 @@ export const handlers = [
     }
 
     if (req.params.userId === '15') {
-      const requestBody = JSON.parse(req.body as string);
+      const requestBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
 
       return res(
         ctx.status(200),

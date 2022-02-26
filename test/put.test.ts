@@ -10,7 +10,7 @@ describe('Fetcher', () => {
       name: 'Michael',
       email: 'm.jordan@email.com'
     };
-    it('Should return posted data', async () => {
+    it('Should return put data', async () => {
       const user = await put(`${BASE_URL}/api/user/${MichaelJordan.id}`, {
         ...MichaelJordan,
         name: 'Michelle'
