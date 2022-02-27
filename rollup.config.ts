@@ -1,13 +1,14 @@
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import sourceMaps from 'rollup-plugin-sourcemaps'
-import camelCase from 'lodash.camelcase'
-import typescript from 'rollup-plugin-typescript2'
-import json from 'rollup-plugin-json'
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import sourceMaps from 'rollup-plugin-sourcemaps';
+import camelCase from 'lodash.camelcase';
+import typescript from 'rollup-plugin-typescript2';
+import json from 'rollup-plugin-json';
+import { terser } from "rollup-plugin-terser";
 
-const pkg = require('./package.json')
+const pkg = require('./package.json');
 
-const libraryName = 'fetcher'
+const libraryName = 'fetcher';
 
 export default {
   input: `src/${libraryName}.ts`,
@@ -34,5 +35,7 @@ export default {
 
     // Resolve source maps to the original source
     sourceMaps(),
-  ],
+
+    process.env.BUILD === 'production' && terser()
+  ]
 }
