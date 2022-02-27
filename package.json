@@ -1,6 +1,7 @@
 {
   "name": "@paquitosoft/fetcher",
   "version": "1.0.0",
+  "private": false,
   "description": "",
   "keywords": [],
   "main": "dist/fetcher.umd.js",

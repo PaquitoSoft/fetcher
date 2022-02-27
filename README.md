@@ -1,6 +1,6 @@
 # Fetcher
 
-A simple (_typed_) library on top of fetch that is more user friendly.
+A simple and [small](https://bundlephobia.com/package/@paquitosoft/fetcher) (_typed_) library on top of fetch that is more user friendly.
 
 Please head to the [API Docs](https://paquitosoft.github.io/fetcher/modules.html) for detailed information.
 
