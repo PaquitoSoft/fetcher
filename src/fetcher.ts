@@ -5,8 +5,9 @@
  */
 import getData from "./get-data";
 import InMemoryCache from "./in-memory-cache";
+import * as MiddlewareManager from "./middleware-manager";
 import { sendData } from "./send-data";
-import { CacheManager, CacheManagerSetterOptions, HttpError } from "./shared-types";
+import type { CacheManager, CacheManagerSetterOptions, HttpError } from "./shared-types";
 
 export type {
   CacheManager,
@@ -87,4 +88,12 @@ export function del<T>(url: string, options?: RequestOptions & { body?: object |
     body: options?.body,
     fetchOptions: options?.fetchOptions
   });
+}
+
+export function addMiddleware(type: 'before' | 'after', middleware: MiddlewareManager.Middleware ): void {
+  MiddlewareManager.addMiddleware(type, middleware);
+}
+
+export function removeMiddleware(middleware: MiddlewareManager.Middleware ) {
+  return MiddlewareManager.removeMiddleware(middleware);
 }

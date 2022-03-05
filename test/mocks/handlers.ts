@@ -1,11 +1,5 @@
 import { rest } from 'msw';
 
-type RequestBody = {
-  id?: string;
-  name: string;
-  email: string;
-};
-
 const BASE_URL = 'https://localhost';
 
 export const handlers = [
@@ -75,12 +69,14 @@ export const handlers = [
     }
 
     if (req.params.userId === '23') {
+      const customHeader = req.headers.get('X-Custom-Header');
       return res(
         ctx.status(200),
         ctx.json({
           id: 23,
           name: 'Michael',
-          email: 'm.jordan@email.com'
+          email: 'm.jordan@email.com',
+          meta: customHeader
         })
       );
     }

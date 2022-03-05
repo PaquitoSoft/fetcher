@@ -14,11 +14,11 @@ describe("Fetcher", () => {
       const cacheManager = getMockedCacheManager();
       setCacheManager(cacheManager);
 
-      const freshUser = await get(`${BASE_URL}/api/user/15`, { ttl: 10 });
+      await get(`${BASE_URL}/api/user/15`, { ttl: 10 });
       expect(cacheManager.get).toHaveBeenCalledTimes(1);
       expect(cacheManager.set).toHaveBeenCalledTimes(1);
 
-      const cachedUser = await get(`${BASE_URL}/api/user/15`);
+      await get(`${BASE_URL}/api/user/15`);
       expect(cacheManager.get).toHaveBeenCalledTimes(2);
       expect(cacheManager.set).toHaveBeenCalledTimes(1);
     });
