@@ -1,6 +1,7 @@
-import { CacheManager } from './shared-types';
+import { CacheManager, HTTPMethod } from './shared-types';
 
 type RequestMiddlewareOptions = {
+  method: HTTPMethod;
   url: string;
   fetchOptions: RequestInit;
   ttl?: number; // seconds
@@ -58,6 +59,7 @@ export function removeMiddleware(middleware: Middleware): Middleware | undefined
 }
 
 export function runBeforeMiddlewares({
+  method,
   url,
   fetchOptions,
   ttl,
@@ -67,6 +69,7 @@ export function runBeforeMiddlewares({
   return middlewares.before.reduce<BeforeMiddlewaresResult>(
     (params, middleware) => {
       const result = middleware({
+        method,
         url: params.url,
         fetchOptions: params.fetchOptions,
         ttl: params.ttl,

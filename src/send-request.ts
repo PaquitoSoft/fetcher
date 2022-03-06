@@ -28,6 +28,7 @@ export default async function sendRequest<T>(
   };
 
   const requestParams = runBeforeMiddlewares({
+    method,
     url,
     fetchOptions: requestOptions,
     body,
