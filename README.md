@@ -158,7 +158,8 @@ function updateProductsMetaData(serverData: products) {
   const isProductsListingUrl = /\/products$/.test(url);
 
   if (isProductsListingUrl) {
-    const isUserInExperiment = (localStorage.getItem('user-ab-engaged-experiments') || '').split(',').includes('exp_001');
+    const isUserInExperiment = (localStorage.getItem('user-ab-engaged-experiments') || '')
+      .split(',').includes('exp_001');
 
     if (isUserInExperiment) {
       return products.map(product => ({
