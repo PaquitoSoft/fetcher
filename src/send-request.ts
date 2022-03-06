@@ -1,16 +1,20 @@
 import { runAfterMiddlewares, runBeforeMiddlewares } from './middleware-manager';
 import parseResponse from './response-parser';
-import { HttpError } from './shared-types';
+import { CacheManager, HttpError, HTTPMethod } from './shared-types';
 
-type SendDataRequestOptions = {
-  method?: string;
-  body?: object | string;
+export type RequestOptions = {
+  method?: HTTPMethod; // default GET
   fetchOptions?: RequestInit;
+  body?: object | string;
+  ttl?: number; // seconds
+  cache?: CacheManager;
 };
 
-export async function sendData<T>(
+const NON_CACHEABLE_HTTP_METHODS = ['POST', 'PUT', 'DELETE'];
+
+export default async function sendRequest<T>(
   url: string,
-  { body, method = 'POST', fetchOptions }: SendDataRequestOptions
+  { method = 'GET', fetchOptions, body, ttl, cache }: RequestOptions
 ): Promise<T> {
   const headers = new Headers(fetchOptions?.headers || {});
   if (headers.get('Content-Type') === null) {
@@ -19,17 +23,29 @@ export async function sendData<T>(
 
   const requestOptions: RequestInit = {
     ...fetchOptions,
-    method: method,
+    method,
     headers
   };
 
-  const requestParams = runBeforeMiddlewares({ url, fetchOptions: requestOptions, body });
+  const requestParams = runBeforeMiddlewares({
+    url,
+    fetchOptions: requestOptions,
+    body,
+    ttl,
+    cache
+  });
 
   if (requestParams.body) {
     requestParams.fetchOptions.body =
       typeof requestParams.body === 'string'
         ? requestParams.body
         : JSON.stringify(requestParams.body);
+  }
+
+  const cachedData = cache?.get(requestParams.url) as T;
+
+  if (cachedData) {
+    return Promise.resolve(runAfterMiddlewares<T>(cachedData));
   }
 
   const response: Response = await fetch(requestParams.url, requestParams.fetchOptions);
@@ -43,7 +59,9 @@ export async function sendData<T>(
 
   const data = await parseResponse<T>(response);
 
-  const output = runAfterMiddlewares<T>(data);
+  if (requestParams.ttl && cache && !NON_CACHEABLE_HTTP_METHODS.includes(method)) {
+    cache.set(requestParams.url, data, { ttl: requestParams.ttl });
+  }
 
-  return output;
+  return runAfterMiddlewares<T>(data);
 }

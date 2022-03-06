@@ -11,3 +11,14 @@ export interface CacheManager {
   get(key: string): unknown;
   set(key: string, value: unknown, options?: CacheManagerSetterOptions): void;
 }
+
+export type HTTPMethod =
+  | 'GET'
+  | 'POST'
+  | 'PUT'
+  | 'DELETE'
+  | 'PATCH'
+  | 'HEAD'
+  | 'OPTIONS'
+  | 'CONNECT'
+  | 'TRACE';

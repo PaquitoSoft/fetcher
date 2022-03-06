@@ -3,11 +3,10 @@
  * working with network requests.
  * @module
  */
-import getData from "./get-data";
 import InMemoryCache from "./in-memory-cache";
 import * as MiddlewareManager from "./middleware-manager";
-import { sendData } from "./send-data";
-import type { CacheManager, CacheManagerSetterOptions, HttpError } from "./shared-types";
+import sendRequest from "./send-request";
+import { CacheManager, CacheManagerSetterOptions, HttpError, HTTPMethod } from "./shared-types";
 
 export type {
   CacheManager,
@@ -44,9 +43,10 @@ export type RequestOptions = {
  * @returns The fetched data (response body)
  */
 export function get<T>(url: string, options?: RequestOptions) {
-  return getData<T>(url, {
-    ttl: options?.ttl,
+  return sendRequest<T>(url, {
+    method: 'GET',
     fetchOptions: options?.fetchOptions,
+    ttl: options?.ttl, // seconds
     cache
   });
 }
@@ -60,7 +60,11 @@ export function get<T>(url: string, options?: RequestOptions) {
  * @returns The fetched data (response body)
  */
 export function post<T>(url: string, body: object | string, options?: RequestOptions) {
-  return sendData<T>(url, { method: 'POST', body, fetchOptions: options?.fetchOptions });
+  return sendRequest<T>(url, {
+    method: 'POST',
+    fetchOptions: options?.fetchOptions,
+    body
+  });
 }
 
 /**
@@ -72,7 +76,11 @@ export function post<T>(url: string, body: object | string, options?: RequestOpt
  * @returns The fetched data (response body)
  */
 export function put<T>(url: string, body: object | string, options?: RequestOptions) {
-  return sendData<T>(url, { method: 'PUT', body, fetchOptions: options?.fetchOptions });
+  return sendRequest<T>(url, {
+    method: 'PUT',
+    fetchOptions: options?.fetchOptions,
+    body
+  });
 }
 
 /**
@@ -83,10 +91,24 @@ export function put<T>(url: string, body: object | string, options?: RequestOpti
  * @returns The fetched data (response body)
  */
 export function del<T>(url: string, options?: RequestOptions & { body?: object | string }) {
-  return sendData<T>(url, {
+  return sendRequest<T>(url, {
     method: 'DELETE',
+    fetchOptions: options?.fetchOptions,
+    body: options?.body
+  });
+}
+
+export function send<T>(
+  url: string,
+  method: HTTPMethod,
+  options?: RequestOptions & { body?: object | string }
+) {
+  return sendRequest<T>(url, {
+    method,
+    fetchOptions: options?.fetchOptions,
     body: options?.body,
-    fetchOptions: options?.fetchOptions
+    ttl: options?.ttl, // seconds
+    cache
   });
 }
 
