@@ -1,6 +1,6 @@
-import { runAfterMiddlewares, runBeforeMiddlewares } from "./middleware-manager";
-import parseResponse from "./response-parser";
-import { CacheManager } from "./shared-types";
+import { runAfterMiddlewares, runBeforeMiddlewares } from './middleware-manager';
+import parseResponse from './response-parser';
+import { CacheManager } from './shared-types';
 
 interface HttpError extends Error {
   statusCode?: number;
@@ -14,31 +14,15 @@ export type GetDataRequestOptions = {
 };
 
 async function getData<T>(
-  url: string, {
-    fetchOptions,
-    ttl,
-    cache
-  }: GetDataRequestOptions
+  url: string,
+  { fetchOptions, ttl, cache }: GetDataRequestOptions
 ): Promise<T> {
-
   const requestOptions: RequestInit = {
     ...fetchOptions,
     headers: fetchOptions?.headers || {}
   };
 
-  // const requestParams = beforeMiddlewares.reduce<RequestParams>((params, middleware) => {
-  //   const result = middleware(url, {
-  //     fetchOptions: params.fetchOptions,
-  //     ttl,
-  //     cache
-  //   });
-  //   return {
-  //     url: result.url ?? params.url,
-  //     ttl,
-  //     fetchOptions: result.fetchOptions ?? params.fetchOptions
-  //   } as RequestParams;
-  // }, { url: url, ttl, fetchOptions: requestOptions });
-  const requestParams = runBeforeMiddlewares(url, { fetchOptions: requestOptions, ttl, cache });
+  const requestParams = runBeforeMiddlewares({ url, fetchOptions: requestOptions, ttl, cache });
 
   const result = cache.get(requestParams.url) as T;
 
@@ -61,9 +45,6 @@ async function getData<T>(
     cache.set(requestParams.url, data, { ttl: requestParams.ttl });
   }
 
-  // const output: T = afterMiddlewares.reduce<T>((prevResult, middleware) => {
-  //   return middleware<T>(data);
-  // }, data);
   const output = runAfterMiddlewares<T>(data);
 
   return output;

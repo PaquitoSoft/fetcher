@@ -1,25 +1,30 @@
-import { CacheManager } from "./shared-types";
+import { CacheManager } from './shared-types';
 
 type RequestMiddlewareOptions = {
+  url: string;
   fetchOptions: RequestInit;
   ttl?: number; // seconds
-  cache: CacheManager;
+  cache?: CacheManager;
+  body?: any;
 };
 
 type BeforeMiddlewaresResult = {
-  url: string,
-  fetchOptions: RequestInit,
-  ttl?: number
+  url: string;
+  fetchOptions: RequestInit;
+  ttl?: number;
+  body?: any;
 };
 
 export type BeforeMiddlewareResult = {
   url?: string;
   ttl?: number;
   fetchOptions?: RequestInit;
+  body?: any;
 };
 
-export type BeforeMiddleware = (url: string, requestOptions: RequestMiddlewareOptions) =>
-  BeforeMiddlewareResult | undefined | null;
+export type BeforeMiddleware = (
+  options: RequestMiddlewareOptions
+) => BeforeMiddlewareResult | undefined | null;
 
 export type AfterMiddleware = <T>(serverData: T) => T;
 
@@ -30,7 +35,7 @@ const middlewares = {
   after: [] as AfterMiddleware[]
 };
 
-export function addMiddleware(type: "before" | "after", middleware: Middleware): void {
+export function addMiddleware(type: 'before' | 'after', middleware: Middleware): void {
   if (type === 'before') {
     middlewares.before.push(middleware as BeforeMiddleware);
   }
@@ -52,25 +57,32 @@ export function removeMiddleware(middleware: Middleware): Middleware | undefined
   }
 }
 
-export function runBeforeMiddlewares(
-  url: string,
-  { fetchOptions, ttl, cache }: RequestMiddlewareOptions
-): BeforeMiddlewaresResult {
-  return middlewares.before.reduce<BeforeMiddlewaresResult>((params, middleware) => {
-    const result = middleware(
-      params.url, {
+export function runBeforeMiddlewares({
+  url,
+  fetchOptions,
+  ttl,
+  body,
+  cache
+}: RequestMiddlewareOptions): BeforeMiddlewaresResult {
+  return middlewares.before.reduce<BeforeMiddlewaresResult>(
+    (params, middleware) => {
+      const result = middleware({
+        url: params.url,
         fetchOptions: params.fetchOptions,
         ttl: params.ttl,
+        body: params.body,
         cache
-      }
-    );
+      });
 
-    return {
-      url: result?.url ?? params.url,
-      fetchOptions: result?.fetchOptions ?? params.fetchOptions,
-      ttl: result?.ttl ?? params.ttl
-    } as BeforeMiddlewaresResult;
-  }, { url, fetchOptions, ttl });
+      return {
+        url: result?.url ?? params.url,
+        fetchOptions: result?.fetchOptions ?? params.fetchOptions,
+        ttl: result?.ttl ?? params.ttl,
+        body: result?.body ?? params.body
+      } as BeforeMiddlewaresResult;
+    },
+    { url, fetchOptions, body, ttl }
+  );
 }
 
 export function runAfterMiddlewares<T>(serverData: T): T {
