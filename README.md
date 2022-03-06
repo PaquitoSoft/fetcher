@@ -2,9 +2,12 @@
 
 A simple and [small](https://bundlephobia.com/package/@paquitosoft/fetcher) (_typed_) library on top of fetch that is more user friendly.
 
-Extra features:
-* Caching
-* Middlewares
+Sections:
+* [Installation](#installation)
+* [How to use it](#how-to-use-it)
+* Extra features:
+  * [Caching](#caching)
+  * [Middlewares](#middlewares)
 
 Please head to the [API Docs](https://paquitosoft.github.io/fetcher/modules.html) for detailed information.
 
