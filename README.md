@@ -2,6 +2,10 @@
 
 A simple and [small](https://bundlephobia.com/package/@paquitosoft/fetcher) (_typed_) library on top of fetch that is more user friendly.
 
+Extra features:
+* Caching
+* Middlewares
+
 Please head to the [API Docs](https://paquitosoft.github.io/fetcher/modules.html) for detailed information.
 
 ## Installation
@@ -12,7 +16,7 @@ npm install @paquitosoft/fetcher
 
 ## How to use it
 
-The module exports four API functions tailored for the main [HTTP Methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) (GET, POST, PUT, DELETE).
+The module exports four API functions tailored for the main [HTTP Methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) (GET, POST, PUT, DELETE) and also another one to tailor your request (and use other HTTP methods).
 
 ### Sending a GET request 
 ```js
@@ -49,9 +53,13 @@ async function saveProduct() {
 }
 ```
 
-### Using a custom cache manager
+## Caching
 
-In case you want to use another persisting layer, you can just create
+By default `fetcher` uses an in-memory cache so you can avoid hitting the server for long-lived resources.
+This is controlled by the `ttl` (_seconds_) parameter for GET requests.
+
+You can also provide your own custom cache manager to store values in other locations such `local-storage` or `IndexedDB`.
+For such situations, you would create
 a class/object which implements the [CacheManager](https://paquitosoft.github.io/fetcher/interfaces/CacheManager.html) interface.
 
 ```js
@@ -93,4 +101,74 @@ async function loadAndCacheProducts() {
   });
   console.log({ products });
 }
+```
+
+## Middlewares
+
+There might be scenarios where you would like to apply some logic before or after every request. You can achieve this by using `middlewares` you should register in the `fetcher` module by calling the `addMiddleware` function.
+
+### Before request middlewares
+
+These are just functions that receive the request meta-data and must return that meta-data with your needed modifications.
+
+Here is an example of a middleware to add some sort of auth token to every request.
+
+```js
+import { addMiddleware, removeMiddleware, get } from '@paquitosoft/fetcher';
+
+// Define your middleware
+function authMiddleware({ method, url, fetchOptions, ttl, body, cache }) {
+  const authToken = localStorage.getItem('auth-token');
+  const headers = {
+    ...requestData.fetchOptions.headers,
+    'Authorization': `Bearer ${authToken}`
+  };
+  return {
+    fetchOptions: {
+      ...requestData.fetchOptions,
+      headers
+    }
+  };
+}
+
+// Tell fetcher you want to use it
+addMiddleware('before', authMiddleware);
+
+// This request would send the auth header
+const shopCart = await get('https://fakestoreapi.com/carts/5');
+
+// If you ever need to remove the middleware, you can do it like this
+removeMiddleware(authMiddleware);
+```
+
+### After request middlewares
+
+In you ever need to modify the response from the server before it gets to your consumer, you can use an _after_ middleware which receives the data fetched from the server (processed) and can return whatever it wants.
+
+Here is an example where we modify the response if user is in a certain A/B experiment:
+
+```js
+import { addMiddleware, get } from '@paquitosoft/fetcher';
+
+// Define your middleware
+function updateProductsMetaData(serverData: products) {
+  const isProductsListingUrl = /\/products$/.test(url);
+
+  if (isProductsListingUrl) {
+    const isUserInExperiment = (localStorage.getItem('user-ab-engaged-experiments') || '').split(',').includes('exp_001');
+
+    if (isUserInExperiment) {
+      return products.map(product => ({
+        ...product,
+        labels: ['NEW']
+      }));
+    }
+  }
+}
+
+// Tell fetcher you want to use it
+addMiddleware('before', authMiddleware);
+
+// Products will include the 'labels' attribute if user is in the experiment
+const products = await get('https://fakestoreapi.com/products');
 ```
