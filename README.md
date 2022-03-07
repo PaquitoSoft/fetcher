@@ -108,7 +108,8 @@ async function loadAndCacheProducts() {
 
 ## Middlewares
 
-There might be scenarios where you would like to apply some logic before or after every request. You can achieve this by using `middlewares` you should register in the `fetcher` module by calling the `addMiddleware` function.
+There might be scenarios where you would like to apply some logic before or after every request. You can achieve this by using `middlewares`.
+You would create middleware functions and register them in the `fetcher` module by calling the `addMiddleware` function.
 
 ### Before request middlewares
 
@@ -123,12 +124,12 @@ import { addMiddleware, removeMiddleware, get } from '@paquitosoft/fetcher';
 function authMiddleware({ method, url, fetchOptions, ttl, body, cache }) {
   const authToken = localStorage.getItem('auth-token');
   const headers = {
-    ...requestData.fetchOptions.headers,
+    ...fetchOptions.headers,
     'Authorization': `Bearer ${authToken}`
   };
   return {
     fetchOptions: {
-      ...requestData.fetchOptions,
+      ...fetchOptions,
       headers
     }
   };

@@ -4,14 +4,22 @@
  * @module
  */
 import InMemoryCache from "./in-memory-cache";
-import * as MiddlewareManager from "./middleware-manager";
+import {
+  Middleware,
+  BeforeMiddleware,
+  AfterMiddleware,
+  addMiddleware as _addMiddleware,
+  removeMiddleware as _removeMiddleware
+} from "./middleware-manager";
 import sendRequest from "./send-request";
 import { CacheManager, CacheManagerSetterOptions, HttpError, HTTPMethod } from "./shared-types";
 
 export type {
   CacheManager,
   CacheManagerSetterOptions,
-  HttpError
+  HttpError,
+  BeforeMiddleware,
+  AfterMiddleware
 };
 
 let cache: CacheManager = InMemoryCache;
@@ -112,10 +120,10 @@ export function send<T>(
   });
 }
 
-export function addMiddleware(type: 'before' | 'after', middleware: MiddlewareManager.Middleware ): void {
-  MiddlewareManager.addMiddleware(type, middleware);
+export function addMiddleware(type: 'before' | 'after', middleware: Middleware ): void {
+  _addMiddleware(type, middleware);
 }
 
-export function removeMiddleware(middleware: MiddlewareManager.Middleware ) {
-  return MiddlewareManager.removeMiddleware(middleware);
+export function removeMiddleware(middleware: Middleware ): Middleware | undefined {
+  return _removeMiddleware(middleware);
 }

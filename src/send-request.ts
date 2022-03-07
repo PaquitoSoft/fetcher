@@ -12,25 +12,39 @@ export type RequestOptions = {
 
 const NON_CACHEABLE_HTTP_METHODS = ['POST', 'PUT', 'DELETE'];
 
+function headersToObject(headers: HeadersInit): Record<string, string> {
+  if (headers instanceof Headers) {
+    return Array.from(headers.entries()).reduce<Record<string, string>>((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+  } else if (Array.isArray(headers)) {
+    return headers.reduce<Record<string, string>>((acc, [key, values]) => {
+      acc[key] = Array.isArray(values) ? values.join(',') : values;
+      return acc;
+    }, {});
+  } else {
+    return headers;
+  }
+}
+
 export default async function sendRequest<T>(
   url: string,
   { method = 'GET', fetchOptions, body, ttl, cache }: RequestOptions
 ): Promise<T> {
-  const headers = new Headers(fetchOptions?.headers || {});
-  if (headers.get('Content-Type') === null) {
-    headers.set('Content-Type', typeof body === 'string' ? 'text/plain' : 'application/json');
+  const headers = headersToObject(fetchOptions?.headers || {});
+  if (!headers['Content-Type']) {
+    headers['Content-Type'] = typeof body === 'string' ? 'text/plain' : 'application/json';
   }
-
-  const requestOptions: RequestInit = {
-    ...fetchOptions,
-    method,
-    headers
-  };
 
   const requestParams = runBeforeMiddlewares({
     method,
     url,
-    fetchOptions: requestOptions,
+    fetchOptions: {
+      ...fetchOptions,
+      method,
+      headers
+    },
     body,
     ttl,
     cache

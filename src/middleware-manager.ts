@@ -58,6 +58,11 @@ export function removeMiddleware(middleware: Middleware): Middleware | undefined
   }
 }
 
+export function resetMiddlewares(): void {
+  middlewares.before.length = 0;
+  middlewares.after.length = 0;
+}
+
 export function runBeforeMiddlewares({
   method,
   url,

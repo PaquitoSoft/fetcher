@@ -1,10 +1,15 @@
 import { get, post, addMiddleware, removeMiddleware } from '../src/fetcher';
-import { AfterMiddleware, BeforeMiddleware } from '../src/middleware-manager';
+import { AfterMiddleware, BeforeMiddleware, resetMiddlewares } from '../src/middleware-manager';
 
 const BASE_URL = 'https://localhost';
 
 describe('Fetcher', () => {
   describe('Middlewares', () => {
+
+    afterEach(() => {
+      resetMiddlewares();
+    });
+
     describe('GET requests', () => {
       it('Should add "before" middlewares', async () => {
         const initialId = '15';
@@ -115,18 +120,22 @@ describe('Fetcher', () => {
           name: 'Karl',
           email: 'Malone'
         };
+        const customValue = '42';
         const avgRebounds = 21;
         const mockBeforeMiddleware = jest.fn() as jest.MockedFunction<BeforeMiddleware>;
         mockBeforeMiddleware.mockImplementation(options => ({
-          body: {
-            ...options.body,
-            email: 'Lewis'
+          fetchOptions: {
+            ...options.fetchOptions,
+            headers: {
+              ...options.fetchOptions.headers,
+              'X-Custom-Header': customValue
+            }
           }
         }));
         const mockAfterMiddleware = jest.fn() as jest.MockedFunction<AfterMiddleware>;
         mockAfterMiddleware.mockImplementation((serverData: any) => ({
           ...serverData,
-          meta: { avgRebounds }
+          meta: { ...serverData.meta, avgRebounds }
         }));
 
         addMiddleware('before', mockBeforeMiddleware);
@@ -136,7 +145,8 @@ describe('Fetcher', () => {
 
         expect(user).toHaveProperty('id', 23);
         expect(user).toHaveProperty('name', 'Karl');
-        expect(user).toHaveProperty('email', 'Lewis');
+        expect(user).toHaveProperty('email', 'Malone');
+        expect(user).toHaveProperty('meta.custom', customValue);
         expect(user).toHaveProperty('meta.avgRebounds', avgRebounds);
       });
     });

@@ -3,13 +3,9 @@ import { rest } from 'msw';
 const BASE_URL = 'https://localhost';
 
 export const handlers = [
-
   rest.get(`${BASE_URL}/api/user/:userId`, (req, res, ctx) => {
     if (req.params.userId === '0') {
-      return res(
-        ctx.status(200),
-        ctx.set('Content-Type', 'application/json')
-      );
+      return res(ctx.status(200), ctx.set('Content-Type', 'application/json'));
     }
 
     if (req.params.userId === '3') {
@@ -20,10 +16,7 @@ export const handlers = [
     }
 
     if (req.params.userId === '12') {
-      return res(
-        ctx.status(200),
-        ctx.text('id=12,name=John,email=j.stockton@email.com')
-      );
+      return res(ctx.status(200), ctx.text('id=12,name=John,email=j.stockton@email.com'));
     }
 
     if (req.params.userId === '15') {
@@ -43,10 +36,7 @@ export const handlers = [
     }
 
     if (req.params.userId === '20') {
-      return res(
-        ctx.status(200),
-        ctx.body('id=20,name=Gary,email=g.payton@email.com')
-      );
+      return res(ctx.status(200), ctx.body('id=20,name=Gary,email=g.payton@email.com'));
     }
 
     if (req.params.userId === '21') {
@@ -82,16 +72,10 @@ export const handlers = [
     }
 
     if (req.params.userId === '25') {
-      return res(
-        ctx.status(307),
-        ctx.set('Location', 'https://localhost/api/user/15')
-      );
+      return res(ctx.status(307), ctx.set('Location', 'https://localhost/api/user/15'));
     }
 
-    return res(
-      ctx.status(404),
-      ctx.json({ error: 'User does not exist' })
-    );
+    return res(ctx.status(404), ctx.json({ error: 'User does not exist' }));
   }),
 
   rest.post(`${BASE_URL}/api/user`, (req, res, ctx) => {
@@ -99,20 +83,26 @@ export const handlers = [
       req.url.searchParams.get('status') === 'error' ||
       req.headers.get('X-Custom-Header') === 'raise-error'
     ) {
-      return res(
-        ctx.status(500),
-        ctx.json({ error: 'Something went wrong' })
-      );
+      return res(ctx.status(500), ctx.json({ error: 'Something went wrong' }));
     }
 
     const requestBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+
+    if (requestBody.name === 'Karl' && req.headers.get('Content-Type') !== 'application/json') {
+      return res(ctx.status(500), ctx.json({ error: 'Invalid Content-Type header' }));
+    }
 
     return res(
       ctx.status(201),
       ctx.json({
         id: 23,
         name: requestBody.name,
-        email: requestBody.email
+        email: requestBody.email,
+        ...(req.headers.get('X-Custom-Header')
+          ? {
+              meta: { custom: req.headers.get('X-Custom-Header') }
+            }
+          : {})
       })
     );
   }),
@@ -130,10 +120,7 @@ export const handlers = [
       );
     }
 
-    return res(
-      ctx.status(404),
-      ctx.json({ error: 'User does not exist' })
-    );
+    return res(ctx.status(404), ctx.json({ error: 'User does not exist' }));
   }),
 
   rest.delete(`${BASE_URL}/api/user/:userId`, (req, res, ctx) => {
@@ -162,9 +149,6 @@ export const handlers = [
       );
     }
 
-    return res(
-      ctx.status(404),
-      ctx.json({ error: 'User does not exist' })
-    );
+    return res(ctx.status(404), ctx.json({ error: 'User does not exist' }));
   })
 ];
