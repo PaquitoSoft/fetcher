@@ -1,6 +1,6 @@
 {
   "name": "@paquitosoft/fetcher",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": false,
   "description": "",
   "keywords": [],
@@ -20,7 +20,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "__lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts --environment BUILD:production",
     "start": "rollup -c rollup.config.ts -w",
@@ -35,10 +35,11 @@
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "release": "standard-version"
   },
   "lint-staged": {
-    "{src,test}/**/*.ts": [
+    "{src,test}/**/*.ks": [
       "prettier --write",
       "git add"
     ]
@@ -119,6 +120,7 @@
     "rollup-plugin-typescript2": "^0.18.0",
     "semantic-release": "^19.0.2",
     "shelljs": "^0.8.3",
+    "standard-version": "^9.3.2",
     "travis-deploy-once": "^5.0.9",
     "ts-jest": "^27.1.3",
     "ts-node": "^10.5.0",
