@@ -1,6 +1,6 @@
 import { CacheManager, HTTPMethod } from './shared-types';
 
-type RequestMiddlewareOptions = {
+export type RequestMiddlewareOptions = {
   method: HTTPMethod;
   url: string;
   fetchOptions: RequestInit;
@@ -9,7 +9,7 @@ type RequestMiddlewareOptions = {
   body?: any;
 };
 
-type BeforeMiddlewaresResult = {
+export type BeforeMiddlewaresResult = {
   url: string;
   fetchOptions: RequestInit;
   ttl?: number;

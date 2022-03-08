@@ -7,6 +7,8 @@ import InMemoryCache from "./in-memory-cache";
 import {
   Middleware,
   BeforeMiddleware,
+  RequestMiddlewareOptions,
+  BeforeMiddlewareResult,
   AfterMiddleware,
   addMiddleware as _addMiddleware,
   removeMiddleware as _removeMiddleware
@@ -18,8 +20,12 @@ export type {
   CacheManager,
   CacheManagerSetterOptions,
   HttpError,
+  HTTPMethod,
+  Middleware,
   BeforeMiddleware,
-  AfterMiddleware
+  AfterMiddleware,
+  RequestMiddlewareOptions,
+  BeforeMiddlewareResult
 };
 
 let cache: CacheManager = InMemoryCache;
@@ -48,7 +54,7 @@ export type RequestOptions = {
  * @param url
  * @param options
  * @typeParam T Type of the data to return
- * @returns The fetched data (response body)
+ * @returns Fetched data (response body)
  */
 export function get<T>(url: string, options?: RequestOptions) {
   return sendRequest<T>(url, {
@@ -65,7 +71,7 @@ export function get<T>(url: string, options?: RequestOptions) {
  * @param body
  * @param options
  * @typeParam T Type of the data to return
- * @returns The fetched data (response body)
+ * @returns Fetched data (response body)
  */
 export function post<T>(url: string, body: object | string, options?: RequestOptions) {
   return sendRequest<T>(url, {
@@ -81,7 +87,7 @@ export function post<T>(url: string, body: object | string, options?: RequestOpt
  * @param body
  * @param options
  * @typeParam T Type of the data to return
- * @returns The fetched data (response body)
+ * @returns Fetched data (response body)
  */
 export function put<T>(url: string, body: object | string, options?: RequestOptions) {
   return sendRequest<T>(url, {
@@ -96,7 +102,7 @@ export function put<T>(url: string, body: object | string, options?: RequestOpti
  * @param url
  * @param options
  * @typeParam T Type of the data to return
- * @returns The fetched data (response body)
+ * @returns Fetched data (response body)
  */
 export function del<T>(url: string, options?: RequestOptions & { body?: object | string }) {
   return sendRequest<T>(url, {
@@ -105,6 +111,15 @@ export function del<T>(url: string, options?: RequestOptions & { body?: object |
     body: options?.body
   });
 }
+
+/**
+ * Send a request to the given URL using the given HTTP method.
+ * @param url
+ * @param method
+ * @param options
+ * @typeParam T Type of the data to return
+ * @returns Fetched data (response body)
+ */
 
 export function send<T>(
   url: string,
@@ -120,10 +135,22 @@ export function send<T>(
   });
 }
 
+/**
+ * Add a middleware to be executed before or after every request.
+ * @param type 'before' or 'after'
+ * @param middleware Middleware to add
+ * @returns void
+ */
 export function addMiddleware(type: 'before' | 'after', middleware: Middleware ): void {
   _addMiddleware(type, middleware);
 }
 
+/**
+ * Remove a middleware from the list of middlewares.
+ * (it will look for it both in 'before' and 'after' middlewares)
+ * @param middleware Middleware to remove
+ * @returns removed middleware if it really existed
+ */
 export function removeMiddleware(middleware: Middleware ): Middleware | undefined {
   return _removeMiddleware(middleware);
 }
