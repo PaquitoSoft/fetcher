@@ -39,7 +39,7 @@
     "release": "standard-version"
   },
   "lint-staged": {
-    "{src,test}/**/*.ks": [
+    "{src,test}/**/*.ts": [
       "prettier --write",
       "git add"
     ]
