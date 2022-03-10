@@ -1,4 +1,4 @@
-import { get, post, put, del, setCacheManager } from '../src/fetcher';
+import { post } from '../src/fetcher';
 import { HttpError } from '../src/shared-types';
 
 const BASE_URL = 'https://localhost';

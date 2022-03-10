@@ -32,9 +32,9 @@ describe('Fetcher', () => {
     it('Should return requested html resource', async () => {
       const htmlDoc = (await get(`${BASE_URL}/api/user/21`)) as Document;
 
-      expect(htmlDoc.getElementById('user-id')!.textContent).toEqual('21');
-      expect(htmlDoc.getElementById('user-name')!.textContent).toEqual('Tim');
-      expect(htmlDoc.getElementById('user-email')!.textContent).toEqual('t.duncan@email.com');
+      expect(htmlDoc.getElementById('user-id')?.textContent).toEqual('21');
+      expect(htmlDoc.getElementById('user-name')?.textContent).toEqual('Tim');
+      expect(htmlDoc.getElementById('user-email')?.textContent).toEqual('t.duncan@email.com');
     });
 
     it('Should return requested text resource', async () => {
