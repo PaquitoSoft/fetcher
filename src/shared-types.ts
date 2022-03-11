@@ -1,6 +1,7 @@
 export interface HttpError extends Error {
   statusCode?: number;
   response?: Response;
+  body?: unknown;
 }
 
 export type CacheManagerSetterOptions = {

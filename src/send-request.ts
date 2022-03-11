@@ -65,14 +65,15 @@ export default async function sendRequest<T>(
 
   const response: Response = await fetch(requestParams.url, requestParams.fetchOptions);
 
+  const data = await parseResponse<T>(response);
+
   if (!response.ok) {
     const error: HttpError = new Error(response.statusText);
     error.statusCode = response.status;
     error.response = response;
+    error.body = data;
     throw error;
   }
-
-  const data = await parseResponse<T>(response);
 
   if (requestParams.ttl && cache && !NON_CACHEABLE_HTTP_METHODS.includes(method)) {
     cache.set(requestParams.url, data, { ttl: requestParams.ttl });

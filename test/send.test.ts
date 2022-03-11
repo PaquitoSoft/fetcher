@@ -23,5 +23,29 @@ describe('Fetcher', () => {
       expect(newUser).toHaveProperty('name', MichaelJordan.name);
       expect(newUser).toHaveProperty('email', MichaelJordan.email);
     });
+
+    it('should handle custom headers from Headers type', async () => {
+      const headers = new Headers();
+      headers.set('X-Custom-Header', 'Vince');
+      headers.set('Content-Type', 'application/json');
+
+      const user = await send(`${BASE_URL}/api/user/15`, 'GET', {
+        fetchOptions: { headers }
+      });
+
+      expect(user).toHaveProperty('id', 15);
+    });
+
+    it('should handle custom headers from array', async () => {
+      const headers: string[][] = [];
+      headers.push(['X-Custom-Header', 'Vince']);
+      headers.push(['Content-Type', 'application/json']);
+
+      const user = await send(`${BASE_URL}/api/user/15`, 'GET', {
+        fetchOptions: { headers }
+      });
+
+      expect(user).toHaveProperty('id', 15);
+    });
   });
 });

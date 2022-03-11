@@ -83,7 +83,7 @@ export const handlers = [
       req.url.searchParams.get('status') === 'error' ||
       req.headers.get('X-Custom-Header') === 'raise-error'
     ) {
-      return res(ctx.status(500), ctx.json({ error: 'Something went wrong' }));
+      return res(ctx.status(500), ctx.json({ error: 'Something went really wrong' }));
     }
 
     const requestBody = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;

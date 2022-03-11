@@ -101,6 +101,7 @@ describe('Fetcher', () => {
         const error = e as HttpError;
         expect(error.statusCode).toBe(404);
         expect(error.message).toEqual('Not Found');
+        expect(error.body).toEqual({ error: 'User does not exist' });
         expect(error.response).not.toBeUndefined();
       }
     });
