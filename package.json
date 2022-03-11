@@ -40,11 +40,6 @@
       "git add"
     ]
   },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
-    }
-  },
   "jest": {
     "transform": {
       ".(ts|tsx)": "ts-jest"
@@ -79,14 +74,7 @@
     "semi": true,
     "singleQuote": true
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
   "devDependencies": {
-    "@commitlint/cli": "^7.1.2",
-    "@commitlint/config-conventional": "^7.1.2",
     "@types/jest": "^27.4.0",
     "@types/node": "^10.11.0",
     "@types/node-fetch": "^2.6.1",
@@ -94,21 +82,20 @@
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
     "colors": "^1.3.2",
-    "commitizen": "^3.0.0",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
-    "cz-conventional-changelog": "^2.1.0",
     "eslint": "^8.10.0",
-    "husky": "^1.0.1",
+    "eslint-plugin-jest": "^26.1.1",
     "jest": "^27.5.1",
     "jest-config": "^27.5.1",
+    "jest-mock-extended": "^2.0.4",
     "jest-unit": "0.0.1",
-    "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
     "msw": "^0.38.1",
     "node-fetch": "^2.6.7",
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
+    "reflect-metadata": "^0.1.13",
     "replace-in-file": "^3.4.2",
     "rimraf": "^2.6.2",
     "rollup": "^0.67.0",
@@ -125,5 +112,8 @@
     "typedoc": "^0.22.12",
     "typescript": "^4.6.2",
     "xmldom": "^0.6.0"
+  },
+  "overrides": {
+    "lodash": "4.17.21"
   }
 }
