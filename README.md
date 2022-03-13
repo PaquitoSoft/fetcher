@@ -1,6 +1,11 @@
 # Fetcher
 
-A simple and [small](https://bundlephobia.com/package/@paquitosoft/fetcher) (_typed_) library on top of fetch that is more user friendly.
+A simple and [small](https://bundlephobia.com/package/@paquitosoft/fetcher) (_typed_) library on top of [**fetch**](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) that is more user friendly.
+
+[![NPM version](https://img.shields.io/npm/v/@paquitosoft/fetcher?logo=npm)](https://www.npmjs.com/package/@paquitosoft/fetcher)
+![CircleCI status](https://circleci.com/gh/PaquitoSoft/fetcher.svg?style=shield)
+[![GitHub license](https://img.shields.io/github/license/paquitosoft/fetcher)](https://github.com/PaquitoSoft/fetcher/blob/main/LICENSE)
+<br/>
 
 Sections:
 * [Installation](#installation)
