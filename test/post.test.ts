@@ -44,6 +44,7 @@ describe('Fetcher', () => {
         const error = e as HttpError;
         expect(error.statusCode).toBe(500);
         expect(error.message).toEqual('Internal Server Error');
+        expect(error.body).toEqual({ error: 'Something went really wrong' });
         expect(error.response).not.toBeUndefined();
       }
     });
@@ -56,6 +57,7 @@ describe('Fetcher', () => {
         const error = e as HttpError;
         expect(error.statusCode).toBe(500);
         expect(error.message).toEqual('Internal Server Error');
+        expect(error.body).toEqual({ error: 'Something went really wrong' });
         expect(error.response).not.toBeUndefined();
       }
     });
