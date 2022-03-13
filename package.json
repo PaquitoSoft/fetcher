@@ -88,6 +88,7 @@
     "eslint-plugin-jest": "^26.1.1",
     "jest": "^27.5.1",
     "jest-config": "^27.5.1",
+    "jest-junit": "^13.0.0",
     "jest-mock-extended": "^2.0.4",
     "jest-unit": "0.0.1",
     "lodash.camelcase": "^4.3.0",
