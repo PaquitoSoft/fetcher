@@ -178,7 +178,7 @@ function updateProductsMetaData(serverData: products) {
 }
 
 // Tell fetcher you want to use it
-addMiddleware('before', authMiddleware);
+addMiddleware('before', updateProductsMetaData);
 
 // Products will include the 'labels' attribute if user is in the experiment
 const products = await get('https://fakestoreapi.com/products');
