@@ -2,24 +2,24 @@ import fetch, { Headers } from 'node-fetch';
 import { DOMParser } from 'xmldom';
 import { server } from './test/mocks/server';
 
-// @ts-ignore
+// @ts-expect-error missing global declaration (TODO:)
 global.fetch = fetch;
-// @ts-ignore
+// @ts-expect-error missing global declaration (TODO:)
 global.Headers = Headers;
-// @ts-ignore
+// @ts-expect-error missing global declaration (TODO:)
 global.DOMParser = DOMParser;
 
 beforeAll(() => {
   // Enable the mocking in tests.
-  server.listen()
+  server.listen();
 });
 
 afterEach(() => {
   // Reset any runtime handlers tests may use.
-  server.resetHandlers()
+  server.resetHandlers();
 });
 
 afterAll(() => {
   // Clean up once the tests are done.
-  server.close()
+  server.close();
 });
