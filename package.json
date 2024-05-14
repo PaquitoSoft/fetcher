@@ -93,7 +93,6 @@
     "jest-unit": "0.0.1",
     "lodash.camelcase": "^4.3.0",
     "msw": "^2.3.0",
-    "node-fetch": "^2.6.7",
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
     "reflect-metadata": "^0.1.13",

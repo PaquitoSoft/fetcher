@@ -1,11 +1,6 @@
-import fetch, { Headers } from 'node-fetch';
 import { DOMParser } from 'xmldom';
 import { server } from './test/mocks/server';
 
-// @ts-expect-error missing global declaration (TODO:)
-global.fetch = fetch;
-// @ts-expect-error missing global declaration (TODO:)
-global.Headers = Headers;
 // @ts-expect-error missing global declaration (TODO:)
 global.DOMParser = DOMParser;
 
