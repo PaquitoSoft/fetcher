@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/PaquitoSoft/fetcher/compare/v1.2.0...v1.3.0) (2024-05-15)
+
+
+### Features
+
+* adding new parameter to after middlewares ([dbd4db9](https://github.com/PaquitoSoft/fetcher/commit/dbd4db93ffd872c56c696576a5b349df6d01d79f))
+
+
+### Bug Fixes
+
+* fix middleware typescript types ([5fbf298](https://github.com/PaquitoSoft/fetcher/commit/5fbf29810ea902995bb1e9eb46e1b7ed1e87f38a))
+
 ## [1.2.0](https://github.com/PaquitoSoft/fetcher/compare/v1.1.0...v1.2.0) (2022-03-11)
 
 
