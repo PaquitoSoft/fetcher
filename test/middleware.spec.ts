@@ -1,11 +1,11 @@
 import { get, post, addMiddleware, removeMiddleware } from '../src/fetcher';
 import { AfterMiddleware, BeforeMiddleware, resetMiddlewares } from '../src/middleware-manager';
+import { TTestUser } from './mocks/test-types';
 
 const BASE_URL = 'https://localhost';
 
 describe('Fetcher', () => {
   describe('Middlewares', () => {
-
     afterEach(() => {
       resetMiddlewares();
     });
@@ -45,13 +45,17 @@ describe('Fetcher', () => {
       it('Should add "after" middlewares', async () => {
         const avgPoints = 50;
         const avgRebounds = 10;
-        const mockAddMetaAvgPointsMiddleware = jest.fn() as jest.MockedFunction<AfterMiddleware>;
-        mockAddMetaAvgPointsMiddleware.mockImplementation((serverData: any) => ({
+        const mockAddMetaAvgPointsMiddleware = jest.fn() as jest.MockedFunction<
+          AfterMiddleware<TTestUser>
+        >;
+        mockAddMetaAvgPointsMiddleware.mockImplementation(serverData => ({
           ...serverData,
           meta: { avgPoints }
         }));
-        const mockAddMetaAvgReboundsMiddleware = jest.fn() as jest.MockedFunction<AfterMiddleware>;
-        mockAddMetaAvgReboundsMiddleware.mockImplementation((serverData: any) => ({
+        const mockAddMetaAvgReboundsMiddleware = jest.fn() as jest.MockedFunction<
+          AfterMiddleware<TTestUser>
+        >;
+        mockAddMetaAvgReboundsMiddleware.mockImplementation(serverData => ({
           ...serverData,
           meta: {
             ...serverData.meta,
@@ -76,8 +80,10 @@ describe('Fetcher', () => {
         mockChangeUrlMiddleware.mockImplementation(options => ({
           url: options.url.replace(initialId, updatedId)
         }));
-        const mockAddMetaAvgPointsMiddleware = jest.fn() as jest.MockedFunction<AfterMiddleware>;
-        mockAddMetaAvgPointsMiddleware.mockImplementation((serverData: any) => ({
+        const mockAddMetaAvgPointsMiddleware = jest.fn() as jest.MockedFunction<
+          AfterMiddleware<TTestUser>
+        >;
+        mockAddMetaAvgPointsMiddleware.mockImplementation(serverData => ({
           ...serverData,
           meta: { avgPoints }
         }));
@@ -132,8 +138,8 @@ describe('Fetcher', () => {
             }
           }
         }));
-        const mockAfterMiddleware = jest.fn() as jest.MockedFunction<AfterMiddleware>;
-        mockAfterMiddleware.mockImplementation((serverData: any) => ({
+        const mockAfterMiddleware = jest.fn() as jest.MockedFunction<AfterMiddleware<TTestUser>>;
+        mockAfterMiddleware.mockImplementation(serverData => ({
           ...serverData,
           meta: { ...serverData.meta, avgRebounds }
         }));

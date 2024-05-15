@@ -27,7 +27,9 @@ export type BeforeMiddleware = (
   options: RequestMiddlewareOptions
 ) => BeforeMiddlewareResult | undefined | null;
 
-export type AfterMiddleware = <T>(serverData: T, context: { response: Response }) => T;
+// This is the best I could came up with
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AfterMiddleware<T = any> = (serverData: T, context: { response: Response }) => T;
 
 export type Middleware = BeforeMiddleware | AfterMiddleware;
 
