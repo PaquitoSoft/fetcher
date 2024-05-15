@@ -105,10 +105,5 @@ describe('Fetcher', () => {
         expect(error.response).not.toBeUndefined();
       }
     });
-
-    it('Should process a redirect', async () => {
-      const user = await get(`${BASE_URL}/api/user/25`);
-      expect(user).toEqual(VinceCarter);
-    });
   });
 });

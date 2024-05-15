@@ -6,28 +6,30 @@ export type RequestMiddlewareOptions = {
   fetchOptions: RequestInit;
   ttl?: number; // seconds
   cache?: CacheManager;
-  body?: any;
+  body?: unknown;
 };
 
 export type BeforeMiddlewaresResult = {
   url: string;
   fetchOptions: RequestInit;
   ttl?: number;
-  body?: any;
+  body?: unknown;
 };
 
 export type BeforeMiddlewareResult = {
   url?: string;
   ttl?: number;
   fetchOptions?: RequestInit;
-  body?: any;
+  body?: unknown;
 };
 
 export type BeforeMiddleware = (
   options: RequestMiddlewareOptions
 ) => BeforeMiddlewareResult | undefined | null;
 
-export type AfterMiddleware = <T>(serverData: T) => T;
+// This is the best I could came up with
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AfterMiddleware<T = any> = (serverData: T, context: { response: Response }) => T;
 
 export type Middleware = BeforeMiddleware | AfterMiddleware;
 
@@ -93,6 +95,6 @@ export function runBeforeMiddlewares({
   );
 }
 
-export function runAfterMiddlewares<T>(serverData: T): T {
-  return middlewares.after.reduce((data, middleware) => middleware(data), serverData);
+export function runAfterMiddlewares<T>(serverData: T, context: { response: Response }): T {
+  return middlewares.after.reduce((data, middleware) => middleware(data, context), serverData);
 }
